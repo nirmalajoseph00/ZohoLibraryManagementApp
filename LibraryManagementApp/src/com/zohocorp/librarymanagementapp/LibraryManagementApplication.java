@@ -102,7 +102,6 @@ class Librarian extends Member
 
 public class LibraryManagementApplication 
 {
-	//public static Scanner sc = new Scanner(System.in);
 	static HashMap<String,Book> books=new HashMap<>();
 	
 	public static void main(String[] args) throws IOException
@@ -116,7 +115,6 @@ public class LibraryManagementApplication
 		{
 			System.out.println("\n Main Menu \n 1.Librarian \n 2.Member \n 3.Quit");
 			System.out.println("Enter your choice: ");
-			//choice = Integer.parseInt(reader.readLine());
 			choice=sc.nextInt();
 			switch(choice)
 			{
@@ -137,12 +135,10 @@ public class LibraryManagementApplication
 			}	
 		}while (mainChoice=='Y');
 		System.out.println("Goodbye");
-		//sc.close();
 	}
 	
 	public static void librarianMenu() throws IOException
 	{	
-		//char librarianChoice='Y';
 		Scanner sc = new Scanner(System.in);
 		BufferedReader reader =new BufferedReader(new InputStreamReader(System.in));
 		int choice;
@@ -164,12 +160,19 @@ public class LibraryManagementApplication
 		case 1:
 			System.out.println("Enter ID of new book: ");
 			bookId=sc.next();
-			System.out.println("Enter name of new book: ");
-			bookName=reader.readLine();
-			System.out.println("Enter author of new book: ");
-			author=reader.readLine();
-			bookObjectMain=librarianObject.addBook(bookId,bookName,author);
-			books.put(bookId,bookObjectMain);
+			if (books.containsKey(bookId))
+			{
+				System.out.println("Book ID already present");
+			}
+			else 
+			{
+				System.out.println("Enter name of new book: ");
+				bookName=reader.readLine();
+				System.out.println("Enter author of new book: ");
+				author=reader.readLine();
+				bookObjectMain=librarianObject.addBook(bookId,bookName,author);
+				books.put(bookId,bookObjectMain);
+			}
 			display();
 			break;
 		case 2:
@@ -180,8 +183,6 @@ public class LibraryManagementApplication
 			System.out.println("Enter the edit: ");
 			editedName=reader.readLine();
 			bookObjectMain=librarianObject.modifyBook(books.get(bookId),editedName, bookField);	
-			//books.put(bookId,bookObjectMain); //check if needed
-			display();
 			break;
 		case 3:
 			System.out.println("Enter ID of book to be deleted: ");
