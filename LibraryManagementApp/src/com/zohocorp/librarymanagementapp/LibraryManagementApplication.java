@@ -49,14 +49,21 @@ class Member
 {
 	public void searchBook(Iterator<Entry<String, Book>> bookIterator,String bookName)
 	{	
+		int flag=0;
 		while (bookIterator.hasNext()) 
 		{
 			Entry<String, Book> mapElement=bookIterator.next();
 			Book bookObject=(Book) mapElement.getValue();
 			if ((bookObject.getBookName()).equalsIgnoreCase(bookName))
 			{
-				System.out.println("present");
+				System.out.println(bookName + " is available");
+				System.out.println("Book ID of searched book: " + bookObject.getBookId());
+				flag=1;
 			}
+		}
+		if (flag==0)
+		{
+			System.out.println(bookName + " is not available");
 		}
 	}
 }
@@ -80,6 +87,7 @@ class Librarian extends Member
 			bookObject.setAuthor(editedName);
 		else
 			bookObject.setBookName(editedName);
+		bookObject.displayBookDetails();
 		return bookObject;
 	}
 	public void deleteBook(Book bookObject)
@@ -162,30 +170,29 @@ public class LibraryManagementApplication
 			author=reader.readLine();
 			bookObjectMain=librarianObject.addBook(bookId,bookName,author);
 			books.put(bookId,bookObjectMain);
-			System.out.println(books);
+			display();
 			break;
 		case 2:
 			System.out.println("Enter ID of book to be modified: ");
 			bookId=sc.next();
 			System.out.println("Enter the field you want to edit(name/author)");
-			bookField=sc.next();
+			bookField=reader.readLine();
 			System.out.println("Enter the edit: ");
-			editedName=sc.next();
+			editedName=reader.readLine();
 			bookObjectMain=librarianObject.modifyBook(books.get(bookId),editedName, bookField);	
 			//books.put(bookId,bookObjectMain); //check if needed
-			System.out.println(books);
+			display();
 			break;
 		case 3:
 			System.out.println("Enter ID of book to be deleted: ");
 			bookId=sc.next();
 			librarianObject.deleteBook(books.get(bookId));
 			books.remove(bookId);
-			System.out.println(books);
 			break;
 		case 4:
 			Iterator<Entry<String, Book>> bookIterator = books.entrySet().iterator();
 			System.out.println("Enter name of book to search: ");
-			bookName=sc.next();
+			bookName=reader.readLine();
 			librarianObject.searchBook(bookIterator,bookName);
 			break;
 		default:
@@ -193,10 +200,10 @@ public class LibraryManagementApplication
 			}
 	}
 	
-	public static void memberMenu()
+	public static void memberMenu() throws IOException
 	{
 		Scanner sc = new Scanner(System.in);
-		//char memberChoice='Y';
+		BufferedReader reader =new BufferedReader(new InputStreamReader(System.in));
 		int choice;
 		String bookName;
 		
@@ -211,12 +218,19 @@ public class LibraryManagementApplication
 		case 1:
 			Iterator<Entry<String, Book>> bookIterator = books.entrySet().iterator();
 			System.out.println("Enter name of book to search: ");
-			bookName=sc.next();
+			bookName=reader.readLine();
 			memberObject.searchBook(bookIterator,bookName);
 			break;
 		default:
 			System.out.println("Wrong choice");
 		}	
+	}
+	
+	public static void display()
+	{
+		System.out.println("BOOK LIST");
+		books.forEach((k,v)
+				-> v.displayBookDetails());
 	}
 
 }
